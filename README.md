@@ -7,7 +7,7 @@ Link do aplikacji: [Tic Tac Toe Online](https://tic-tac-toe-inky-eight-63.vercel
 ## 📋 **Opis Projektu**
 
 Prosta gra **Tic Tac Toe** stworzona w ramach projektu na przedmiot **Frameworki Frontendowe**.  
-Aplikacja umożliwia rozgrywkę dwuosobową oraz zapis i wczytywanie stanu gry przy użyciu Firebase.
+Aplikacja umożliwia jednoosobową rozgrywkę oraz zapis i wczytywanie stanu gry przy użyciu Firebase.
 
 ---
 
