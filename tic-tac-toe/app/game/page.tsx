@@ -6,14 +6,12 @@ import { auth, db } from '@/lib/firebaseConfig';
 import { useRouter } from 'next/navigation';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
-// Typy dla gry
+const SIZE = 3; // Rozmiar planszy
+
 type Player = 'X' | 'O';
 type Cell = Player | null;
 
-const SIZE = 3; // Rozmiar planszy
-
 const GamePage: React.FC = () => {
-  // Stan gry
   const [board, setBoard] = useState<Cell[][]>(
     Array(SIZE).fill(null).map(() => Array(SIZE).fill(null))
   );
@@ -23,7 +21,6 @@ const GamePage: React.FC = () => {
   const [freeCells, setFreeCells] = useState(SIZE * SIZE);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  // Konfiguracja wyglądu
   const [cellColor, setCellColor] = useState<string>('#ffffff'); 
   const [xColor, setXColor] = useState<string>('#ef4444'); 
   const [oColor, setOColor] = useState<string>('#3b82f6'); 
@@ -33,7 +30,6 @@ const GamePage: React.FC = () => {
 
   const router = useRouter();
 
-  // Sprawdzanie logowania
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -88,7 +84,6 @@ const GamePage: React.FC = () => {
     );
   };
 
-  // Reset gry
   const resetGame = () => {
     setBoard(Array(SIZE).fill(null).map(() => Array(SIZE).fill(null)));
     setCurrentPlayer('X');
@@ -97,7 +92,6 @@ const GamePage: React.FC = () => {
     setFreeCells(SIZE * SIZE);
   };
 
-  // Zapis gry
   const saveGame = async () => {
     if (!userEmail) return alert('Musisz być zalogowany!');
     const flattenedBoard = board.flat();
@@ -109,7 +103,6 @@ const GamePage: React.FC = () => {
     alert('Gra zapisana!');
   };
 
-  // Wczytanie gry
   const loadGame = async () => {
     const docSnap = await getDoc(doc(db, 'games', userEmail!));
     if (docSnap.exists()) {
@@ -127,23 +120,18 @@ const GamePage: React.FC = () => {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center h-screen text-center">
-      {/* Informacje o użytkowniku */}
+    <main className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 md:p-8 lg:p-10 text-center">
       <div className="absolute top-4 right-4 flex items-center space-x-4">
         {userEmail && (
-          <p className="text-white">Zalogowano jako: <span className="font-bold">{userEmail}</span></p>
+          <p className="text-white text-sm sm:text-base md:text-lg">Zalogowano jako: <span className="font-bold">{userEmail}</span></p>
         )}
-        <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-4 rounded">Wyloguj</button>
+        <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-4 rounded text-sm sm:text-base">Wyloguj</button>
       </div>
-
-      {/* Stan gry */}
-      <h1 className="text-4xl font-bold mb-6 text-white">Tic Tac Toe</h1>
-      <p className="text-lg text-white mb-4">Ruchy X: {moves.X} | Ruchy O: {moves.O}</p>
-      <p className="text-lg text-white mb-4">Wolne pola: {freeCells}</p>
-      {winner && <p className="text-2xl font-bold text-green-500 mb-4">{winner}</p>}
-
-      {/* Plansza gry */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-white">Tic Tac Toe</h1>
+      <p className="text-sm sm:text-base md:text-lg text-white mb-4">Ruchy X: {moves.X} | Ruchy O: {moves.O}</p>
+      <p className="text-sm sm:text-base md:text-lg text-white mb-4">Wolne pola: {freeCells}</p>
+      {winner && <p className="text-lg sm:text-xl md:text-2xl font-bold text-green-500 mb-4">{winner}</p>}
+      <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-4">
         {board.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
             <div
@@ -164,10 +152,13 @@ const GamePage: React.FC = () => {
           ))
         )}
       </div>
-      <div className="flex space-x-4 mt-4">
+      <div className="flex flex-wrap gap-4 justify-center mb-4">
         <input type="color" value={cellColor} onChange={(e) => setCellColor(e.target.value)} />
         <input type="color" value={xColor} onChange={(e) => setXColor(e.target.value)} />
         <input type="color" value={oColor} onChange={(e) => setOColor(e.target.value)} />
+        <input type="color" value={borderColor} onChange={(e) => setBorderColor(e.target.value)} />
+        <input type="range" min="40" max="100" value={cellSize} onChange={(e) => setCellSize(Number(e.target.value))} />
+        <input type="range" min="16" max="40" value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} />
       </div>
       <div className="flex space-x-4 mt-4">
         <button onClick={saveGame} className="bg-blue-500 text-white py-2 px-4 rounded">Zapisz</button>

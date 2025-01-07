@@ -18,7 +18,7 @@ export default function RegisterPage() {
       await createUserWithEmailAndPassword(auth, email, password);
       alert('Rejestracja udana!');
       router.push('/game'); // Przekierowanie do gry
-    } catch (err) {
+    } catch {
       setError('Błąd podczas rejestracji');
     }
   };

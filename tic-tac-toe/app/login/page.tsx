@@ -18,6 +18,7 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       alert('Zalogowano pomyślnie!');
       router.push('/game'); // Przekierowanie do gry
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError('Nieprawidłowe dane logowania');
     }

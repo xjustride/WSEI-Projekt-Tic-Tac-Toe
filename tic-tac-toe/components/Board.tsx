@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { db, auth } from '@/lib/firebaseConfig'; // Firebase
+import React, { useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { db, auth } from '@/lib/firebaseConfig';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { Player, Cell, GameState } from '@/types/game';
 
-const SIZE = 3; // Rozmiar planszy
+const SIZE = 3; 
 
 const Board: React.FC = () => {
   const [board, setBoard] = useState<Cell[][]>(
@@ -13,12 +14,11 @@ const Board: React.FC = () => {
   );
   const [currentPlayer, setCurrentPlayer] = useState<Player>('X');
   const [winner, setWinner] = useState<string | null>(null);
-  const [gameId, setGameId] = useState<string>('test-game'); // ID gry
+  const gameId = 'test-game';
   const [bgColor, setBgColor] = useState<string>('#1f2937');
   const [xColor, setXColor] = useState<string>('#ef4444');
   const [oColor, setOColor] = useState<string>('#3b82f6');
 
-  // Zapis gry do Firestore
   const saveGame = async () => {
     const user = auth.currentUser;
     if (!user) {
@@ -26,11 +26,10 @@ const Board: React.FC = () => {
       return;
     }
 
-    // Spłaszczamy planszę do jednowymiarowej tablicy
     const flattenedBoard = board.flat();
 
     const gameData: GameState = {
-        board: flattenedBoard, // Zapisujemy jako 1-wymiarowa tablica
+        board: flattenedBoard,
         currentPlayer,
         winner,
         createdBy: user.uid,
@@ -53,7 +52,7 @@ const Board: React.FC = () => {
         restoredBoard.push(data.board.slice(i * SIZE, (i + 1) * SIZE));
       }
   
-      setBoard(restoredBoard); // Aktualizujemy planszę
+      setBoard(restoredBoard); 
       setCurrentPlayer(data.currentPlayer);
       setWinner(data.winner);
     } else {
